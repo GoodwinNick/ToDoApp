@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import CoreData
 
 
 
@@ -25,6 +25,25 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                            forCellReuseIdentifier: identifier)
     }
     
+    // MARK: - viewWillAppear
+      override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+          return
+        }
+
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Task")
+        do {
+            let test = try managedContext.fetch(fetchRequest)
+            print(type(of: test))
+            toDoList.setTaskList(tasks: test as? [Task])
+        } catch let error as NSError {
+          print("Could not fetch. \(error), \(error.userInfo)")
+        }
+      }
+
     
     @IBAction func sortByPriority(_ sender: Any) {
         toDoList.sortBy(.priotity)
@@ -75,12 +94,20 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             return UITableViewCell()
         }
         let formatter = DateFormatter()
-        formatter.dateStyle = .full
+        formatter.dateStyle = .short
         
-        cell.titleLabel?.text = task.title
-        cell.descriptionLabel?.text = task.description
-        cell.priorityLabel?.text = "Priority " + String(task.priority!)
-        cell.dateToBeDoneLabel?.text = "Date " + String(formatter.string(from: task.dateToBeDone ?? Date.init()))
+        let title = task.value(forKey: "titleOfTask") as? String
+        cell.titleLabel?.text = title
+        
+        let description = task.value(forKey: "descriptionOfTask") as? String
+        cell.descriptionLabel?.text = description
+        
+        let priority = task.value(forKey: "priorityOfTask") as? Int
+        cell.priorityLabel?.text = "Priority " + (String(priority ?? 0))
+        
+        let date = formatter.string(from: task.value(forKey: "dateToBeDone") as? Date ?? .init())
+        cell.dateToBeDoneLabel?.text = "Date " + date
+        
         return cell
     }
 }
@@ -97,21 +124,20 @@ extension MainViewController: TransferedDelegate {
     
     
     // MARK: DELEGATE_FUNCs
-    func addNew(task: Task) {
-        toDoList.addNewTask(newTask: task)
+    func addNew(title: String, description: String, date: Date, priority: Int) {
+        toDoList.addNewTask(title: title, description: description, date: date, priority: priority)
         toDoTable.reloadData()
     }
     
-    func updateTask(task: Task) {
-    
-        
-        toDoList.editTask(task: task, index: indexOfTypedRow!)
+    func updateTask(title: String, description: String, date: Date, priority: Int) {
+        toDoList.editTask(title: title, description: description, date: date, priority: priority, index: indexOfTypedRow!)
         toDoTable.reloadData()
     }
+
     func getInfo() -> Task {
         
         guard let index = indexOfTypedRow else {
-            return Task(title: "Wrong", description: "Wrong", priority: 0,dateToBeDone: .init())
+            return Task()
         }
         return (toDoList.tasks?[index])!
     }
@@ -120,13 +146,10 @@ extension MainViewController: TransferedDelegate {
         guard let index = indexOfTypedRow else {
             return
         }
-        
-        guard let task = toDoList.tasks?[index] else {
-            return
-        }
-        
-        toDoList.deleteTask(task)
+        toDoList.deleteTask(toDoList.tasks![index])
         toDoTable.reloadData()
     }
     
 }
+
+

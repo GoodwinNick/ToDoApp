@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class InfoAboutTaskViewController: UIViewController {
     
@@ -32,12 +33,16 @@ class InfoAboutTaskViewController: UIViewController {
         guard let currentTask = delegate?.getInfo() else {
             return
         }
-        titleOfTask.text = currentTask.title
-        descriptionOfTask.text = currentTask.description
-        dateToBeDone.setDate(currentTask.dateToBeDone!, animated: false)
+        
+        titleOfTask.text = currentTask.value(forKey: "titleOfTask") as? String
+        descriptionOfTask.text = currentTask.value(forKey: "descriptionOfTask") as? String
+        dateToBeDone.setDate(currentTask.value(forKey: "dateToBeDone") as! Date,
+                             animated: false)
         priorityStepper.maximumValue = 1
         priorityStepper.maximumValue = 10
-        priorityStepper.value = Double(currentTask.priority ?? 0)
+        
+        let priority = currentTask.value(forKey: "priorityOfTask") as! Int
+        priorityStepper.value = Double(priority)
         priorityLabel.text = "\(Int(priorityStepper.value))"
         
     }
@@ -46,10 +51,10 @@ class InfoAboutTaskViewController: UIViewController {
     }
     
     @IBAction func editCurrentTask(_ sender: Any) {
-        delegate?.updateTask(task: Task(title: titleOfTask.text,
-                                        description: descriptionOfTask.text,
-                                        priority: Int(priorityStepper.value),
-                                        dateToBeDone: dateToBeDone.date))
+        delegate?.updateTask(title: titleOfTask.text,
+                             description: descriptionOfTask.text,
+                             date: dateToBeDone.date,
+                             priority: Int(priorityStepper.value))
         
         self.dismiss(animated: true, completion: nil)
     }

@@ -31,6 +31,11 @@ import UIKit
         }
         
         @IBAction func addAndHideController(_ sender: Any) {
+            let alert = UIAlertController(title: "Error", message: "You should input at least title.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Click",
+                                          style: .default,
+                                          handler: nil))
+            
             var priority = Int(priorityStepper.value)
             guard let title = titleOfTaskField.text,
                   let description = descriptionOfTaskField.text else {
@@ -39,7 +44,7 @@ import UIKit
             }
             
             guard title != "" else {
-                titleOfTaskField.text = "You should input at least title."
+                self.present(alert, animated: true, completion: nil)
                 return
             }
             
@@ -55,11 +60,10 @@ import UIKit
             }
             
             
-            
-            delegate?.addNew(task: Task(title: title,
-                                        description: description,
-                                        priority: priority,
-                                        dateToBeDone: datePicker.date))
+            delegate?.addNew(title: title,
+                             description: description,
+                             date: datePicker.date,
+                             priority: priority)
             self.dismiss(animated: true, completion: nil)
         }
         
