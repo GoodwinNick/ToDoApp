@@ -8,8 +8,9 @@
 import Foundation
 
 protocol TransferedDelegate: AnyObject {
-    func addNew(task: Task)
-    func updateTask(task: Task)
+    func addNew(title: String, description: String, date: Date, priority: Int)
+    func updateTask(title: String, description: String, date: Date, priority: Int)
+//    func updateTask(editedTask: Task)
     func getInfo() -> Task
     func deleteTask()
 }

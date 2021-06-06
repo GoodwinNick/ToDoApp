@@ -18,9 +18,9 @@ extension Task {
 
     @NSManaged public var dateToBeDone: Date?
     @NSManaged public var descriptionOfTask: String?
-    @NSManaged public var priorityOfTask: Int16
+    @NSManaged public var priorityOfTask: Int
     @NSManaged public var titleOfTask: String?
-
+    
 }
 
 extension Task : Identifiable {

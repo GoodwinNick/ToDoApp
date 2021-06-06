@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E232" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+    <entity name="Task" representedClassName=".Task" syncable="YES">
+        <attribute name="dateToBeDone" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="descriptionOfTask" optional="YES" attributeType="String"/>
+        <attribute name="priorityOfTask" optional="YES" attributeType="Integer 16" minValueString="1" maxValueString="10" defaultValueString="1" usesScalarValueType="YES"/>
+        <attribute name="titleOfTask" optional="YES" attributeType="String" customClassName="ToDoList"/>
+    </entity>
+    <elements>
+        <element name="Task" positionX="-63" positionY="-18" width="369.1448364257812" height="89"/>
+    </elements>
 </model>
