@@ -20,9 +20,12 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         toDoTable.register(UINib(nibName: "toDoCellIdn",
                                  bundle: nil),
-                           forCellReuseIdentifier: identifier)
+                           forCellReuseIdentifier: identifier
+        )
+        
     }
     
     // MARK: fetch Request
@@ -32,6 +35,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
 
         let managedContext = appDelegate.persistentContainer.viewContext
+        
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Task")
         do {
             let test = try managedContext.fetch(fetchRequest)
@@ -92,11 +96,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "toDoIdn",
-                                                       for: indexPath) as! CustomTableViewCell
+                                                 for: indexPath
+        ) as! CustomTableViewCell
      
+        
         guard let task = toDoList.tasks?[indexPath.row] else {
             return UITableViewCell()
         }
+        
+        
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         
@@ -126,13 +134,32 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
 // MARK: extension for delegating funcs
 extension MainViewController: TransferedDelegate {
     
-    func addNew(title: String, description: String, date: Date, priority: Int) {
-        toDoList.addNewTask(title: title, description: description, date: date, priority: priority)
+    func addNew(title: String,
+                description: String,
+                date: Date,
+                priority: Int) {
+        
+        toDoList.addNewTask(title: title,
+                            description: description,
+                            date: date,
+                            priority: priority
+        )
+        
         toDoTable.reloadData()
     }
     
-    func updateTask(title: String, description: String, date: Date, priority: Int) {
-        toDoList.editTask(title: title, description: description, date: date, priority: priority, index: indexOfTypedRow!)
+    func updateTask(title: String,
+                    description: String,
+                    date: Date,
+                    priority: Int) {
+        
+        toDoList.editTask(title: title,
+                          description: description,
+                          date: date,
+                          priority: priority,
+                          index: indexOfTypedRow!
+        )
+        
         toDoTable.reloadData()
     }
 

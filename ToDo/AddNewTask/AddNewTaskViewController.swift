@@ -35,7 +35,8 @@ import UIKit
         }
         
         // MARK: hide keyboard
-        override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        override func touchesEnded(_ touches: Set<UITouch>,
+                                   with event: UIEvent?) {
             view.endEditing(true)
         }
         
@@ -46,15 +47,19 @@ import UIKit
         
         // MARK: add task and hide controller
         @IBAction func addAndHideController(_ sender: Any) {
-            let alert = UIAlertController(title: "Error", message: "You should input at least title.", preferredStyle: .alert)
+            
+            let alert = UIAlertController(title: "Error",
+                                          message: "You should input at least title.",
+                                          preferredStyle: .alert)
+            
             alert.addAction(UIAlertAction(title: "Click",
                                           style: .default,
                                           handler: nil))
             
             var priority = Int(priorityStepper.value)
-            guard let title = titleOfTaskField.text,
+            
+            guard let title       = titleOfTaskField.text,
                   let description = descriptionOfTaskField.text else {
-                print("Wrong")
                 return
             }
             
@@ -77,6 +82,7 @@ import UIKit
                              description: description,
                              date: datePicker.date,
                              priority: priority)
+            
             self.dismiss(animated: true, completion: nil)
         }
         
