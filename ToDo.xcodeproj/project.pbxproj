@@ -53,6 +53,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9810A98D266D296000C56604 /* CoreDataFiles */ = {
+			isa = PBXGroup;
+			children = (
+				989352F2266BF21C0096C6D3 /* Task+CoreDataClass.swift */,
+				989352F3266BF21C0096C6D3 /* Task+CoreDataProperties.swift */,
+			);
+			path = CoreDataFiles;
+			sourceTree = "<group>";
+		};
 		986F3512266A9FD80044FCAE /* AddNewTask */ = {
 			isa = PBXGroup;
 			children = (
@@ -64,8 +73,6 @@
 		98A580352665DB4900F6E3E3 = {
 			isa = PBXGroup;
 			children = (
-				989352F2266BF21C0096C6D3 /* Task+CoreDataClass.swift */,
-				989352F3266BF21C0096C6D3 /* Task+CoreDataProperties.swift */,
 				98A580402665DB4900F6E3E3 /* ToDo */,
 				98A5803F2665DB4900F6E3E3 /* Products */,
 			);
@@ -82,13 +89,14 @@
 		98A580402665DB4900F6E3E3 /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
-				98A580412665DB4900F6E3E3 /* AppDelegate.swift */,
-				98A580432665DB4900F6E3E3 /* SceneDelegate.swift */,
+				9810A98D266D296000C56604 /* CoreDataFiles */,
 				986F3512266A9FD80044FCAE /* AddNewTask */,
 				98A580592665E3A100F6E3E3 /* InfoAboutTask */,
 				98A580642666E22200F6E3E3 /* Main View Contriller */,
 				98FC100F26683151004E265A /* ProtocolForGetData */,
 				98A580632666E1BD00F6E3E3 /* ToDoTasks */,
+				98A580412665DB4900F6E3E3 /* AppDelegate.swift */,
+				98A580432665DB4900F6E3E3 /* SceneDelegate.swift */,
 				98A580472665DB4900F6E3E3 /* Main.storyboard */,
 				98A5804A2665DB4D00F6E3E3 /* Assets.xcassets */,
 				98A5804C2665DB4D00F6E3E3 /* LaunchScreen.storyboard */,

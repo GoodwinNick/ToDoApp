@@ -25,10 +25,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                            forCellReuseIdentifier: identifier)
     }
     
-    // MARK: - viewWillAppear
-      override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
+    // MARK: fetch Request
+    func fetchReq() {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
           return
         }
@@ -37,11 +35,17 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Task")
         do {
             let test = try managedContext.fetch(fetchRequest)
-            print(type(of: test))
             toDoList.setTaskList(tasks: test as? [Task])
         } catch let error as NSError {
           print("Could not fetch. \(error), \(error.userInfo)")
         }
+      }
+
+
+    // MARK: - view will appear
+      override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchReq()
       }
 
     
@@ -55,7 +59,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         toDoTable.reloadData()
     }
     
-    // MARK: SEND_SELF_TO_DELEGATE
+    // MARK: send self to delegate
     @IBSegueAction func goToInfoScreen(_ coder: NSCoder) -> AddNewTaskViewController? {
         let viewController = AddNewTaskViewController(coder: coder)
         viewController?.delegate = self
@@ -68,7 +72,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return viewController
     }
     
-    // MARK: ALL_ABOUT_TABLE
+    // MARK: all about table
     func tableView(_ tableView: UITableView,
                    willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         indexOfTypedRow = indexPath.row
@@ -119,11 +123,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
 
 
 
-// MARK: EXTENSION_FOR_DELEGATING
+// MARK: extension for delegating funcs
 extension MainViewController: TransferedDelegate {
     
-    
-    // MARK: DELEGATE_FUNCs
     func addNew(title: String, description: String, date: Date, priority: Int) {
         toDoList.addNewTask(title: title, description: description, date: date, priority: priority)
         toDoTable.reloadData()
@@ -135,7 +137,6 @@ extension MainViewController: TransferedDelegate {
     }
 
     func getInfo() -> Task {
-        
         guard let index = indexOfTypedRow else {
             return Task()
         }
@@ -147,6 +148,7 @@ extension MainViewController: TransferedDelegate {
             return
         }
         toDoList.deleteTask(toDoList.tasks![index])
+        fetchReq()
         toDoTable.reloadData()
     }
     

@@ -20,16 +20,31 @@ import UIKit
             super.init(coder: coder)
         }
         
-        override func viewDidLoad() {
-            super.viewDidLoad()
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            
+            titleOfTaskField.layer.borderWidth = 1
+            titleOfTaskField.layer.borderColor = UIColor.gray.cgColor
+            
+            descriptionOfTaskField.layer.borderWidth = 1
+            descriptionOfTaskField.layer.borderColor = UIColor.gray.cgColor
+            
+            
             priorityStepper.value += 1
             priorityLabel.text = "Priority - \( Int(priorityStepper.value))"
         }
         
+        // MARK: hide keyboard
+        override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+            view.endEditing(true)
+        }
+        
+        // MARK: working of stepper
         @IBAction func stepperWorked(_ sender: Any) {
             priorityLabel.text = "Priority - \( Int(priorityStepper.value))"
         }
         
+        // MARK: add task and hide controller
         @IBAction func addAndHideController(_ sender: Any) {
             let alert = UIAlertController(title: "Error", message: "You should input at least title.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Click",
@@ -48,7 +63,6 @@ import UIKit
                 return
             }
             
-            
             switch priority {
             case _ where  priority > 10:
                 priority = 10
@@ -58,7 +72,6 @@ import UIKit
             default:
                 break
             }
-            
             
             delegate?.addNew(title: title,
                              description: description,
