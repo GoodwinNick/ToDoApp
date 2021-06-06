@@ -10,7 +10,6 @@ import Foundation
 protocol TransferedDelegate: AnyObject {
     func addNew(title: String, description: String, date: Date, priority: Int)
     func updateTask(title: String, description: String, date: Date, priority: Int)
-//    func updateTask(editedTask: Task)
     func getInfo() -> Task
     func deleteTask()
 }
