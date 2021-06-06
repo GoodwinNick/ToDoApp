@@ -49,7 +49,8 @@ class InfoAboutTaskViewController: UIViewController {
     }
     
     // MARK: hide keyboard
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
         view.endEditing(true)
     }
     
@@ -63,19 +64,23 @@ class InfoAboutTaskViewController: UIViewController {
         delegate?.updateTask(title: titleOfTask.text,
                              description: descriptionOfTask.text,
                              date: dateToBeDone.date,
-                             priority: Int(priorityStepper.value))
+                             priority: Int(priorityStepper.value)
+        )
+        
         self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: delete current task
     @IBAction func deleteCurrentTask(_ sender: Any) {
         delegate?.deleteTask()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true,
+                     completion: nil)
     }
     
     // MARK: close info tab
     @IBAction func closeInfoTab(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true,
+                     completion: nil)
     }
     
 }

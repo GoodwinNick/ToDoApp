@@ -23,11 +23,19 @@ class ToDoList {
     }
     
     // MARK: edit task
-    func editTask(title: String, description: String, date: Date, priority: Int, index: Int) {
-        tasks?[index].setValue(title, forKeyPath: "titleOfTask")
-        tasks?[index].setValue(description, forKeyPath: "descriptionOfTask")
-        tasks?[index].setValue(priority, forKeyPath: "priorityOfTask")
-        tasks?[index].setValue(date, forKeyPath: "dateToBeDone")
+    func editTask(title: String,
+                  description: String,
+                  date: Date,
+                  priority: Int,
+                  index: Int) {
+        tasks?[index].setValue(title,
+                               forKeyPath: "titleOfTask")
+        tasks?[index].setValue(description,
+                               forKeyPath: "descriptionOfTask")
+        tasks?[index].setValue(priority,
+                               forKeyPath: "priorityOfTask")
+        tasks?[index].setValue(date,
+                               forKeyPath: "dateToBeDone")
         save()
         
     }
@@ -42,9 +50,11 @@ class ToDoList {
             
         switch option {
         case .priotity:
-            sortBy = NSSortDescriptor(key:"priorityOfTask", ascending:true)
+            sortBy = NSSortDescriptor(key:"priorityOfTask",
+                                      ascending:true)
         case .date:
-            sortBy = NSSortDescriptor(key:"dateToBeDone", ascending:true)
+            sortBy = NSSortDescriptor(key:"dateToBeDone",
+                                      ascending:true)
         }
         
         fetchRequest.sortDescriptors = [sortBy]
@@ -66,17 +76,26 @@ class ToDoList {
         
     }
     // MARK: addNewTask
-    func addNewTask(title: String, description: String, date: Date, priority: Int) {
+    func addNewTask(title: String,
+                    description: String,
+                    date: Date,
+                    priority: Int) {
         
         let managedContext = getContext()
         
-        let entity = NSEntityDescription.entity(forEntityName: "Task", in: managedContext)!
+        let entity = NSEntityDescription.entity(forEntityName: "Task",
+                                                in: managedContext)!
         
-        let nsmo = NSManagedObject(entity: entity, insertInto: managedContext)
-        nsmo.setValue(title, forKeyPath: "titleOfTask")
-        nsmo.setValue(description, forKeyPath: "descriptionOfTask")
-        nsmo.setValue(priority, forKeyPath: "priorityOfTask")
-        nsmo.setValue(date, forKeyPath: "dateToBeDone")
+        let nsmo = NSManagedObject(entity: entity,
+                                   insertInto: managedContext)
+        nsmo.setValue(title,
+                      forKeyPath: "titleOfTask")
+        nsmo.setValue(description,
+                      forKeyPath: "descriptionOfTask")
+        nsmo.setValue(priority,
+                      forKeyPath: "priorityOfTask")
+        nsmo.setValue(date,
+                      forKeyPath: "dateToBeDone")
         tasks?.append(nsmo as! Task)
         save()
     }
