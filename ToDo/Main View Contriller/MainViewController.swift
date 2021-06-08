@@ -12,21 +12,33 @@ import CoreData
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var toDoTable: UITableView!
     
     private var indexOfTypedRow: Int?
     private let toDoList = ToDoList()
     private let identifier = "Cell"
+    private let formatter = DateFormatter()
+    private var searchData: [Task]?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        formatter.dateFormat = "EEE, MMM, d, HH:mm"
         toDoTable.register(UINib(nibName: "toDoCellIdn",
                                  bundle: nil),
                            forCellReuseIdentifier: identifier
         )
+        searchBar.delegate = self
         
     }
+    
+    // MARK: hide keyboard
+    override func touchesEnded(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     
     // MARK: fetch Request
     func fetchReq() {
@@ -35,6 +47,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
 
         let managedContext = appDelegate.persistentContainer.viewContext
+        
         
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Task")
         do {
@@ -85,10 +98,14 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        return toDoList.tasks?.count ?? 0
+        guard let _ = searchData?.isEmpty else {
+            return toDoList.tasks?.count ?? 0
+        }
+        return searchData?.count ?? 0
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        
         return 1
     }
     
@@ -96,29 +113,40 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "toDoIdn",
-                                                 for: indexPath
-        ) as! CustomTableViewCell
+                                                 for: indexPath) as! CustomTableViewCell
      
         
-        guard let task = toDoList.tasks?[indexPath.row] else {
-            return UITableViewCell()
+        
+        cell.selectionStyle = .none
+        let title: String?
+        let description: String?
+        let priority: Int?
+        let date: String?
+        
+        switch searchData {
+        case .none:
+            guard let task = toDoList.tasks?[indexPath.row] else {
+                return UITableViewCell()
+            }
+            title = task.value(forKey: "titleOfTask") as? String
+            description = task.value(forKey: "descriptionOfTask") as? String
+            priority = task.value(forKey: "priorityOfTask") as? Int
+            date = formatter.string(from: task.value(forKey: "dateToBeDone") as! Date)
+            
+        case .some(_):
+            guard let task = searchData?[indexPath.row] else {
+                return UITableViewCell()
+            }
+            title = task.value(forKey: "titleOfTask") as? String
+            description = task.value(forKey: "descriptionOfTask") as? String
+            priority = task.value(forKey: "priorityOfTask") as? Int
+            date = formatter.string(from: task.value(forKey: "dateToBeDone") as! Date)
         }
-        
-        
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        
-        let title = task.value(forKey: "titleOfTask") as? String
+
         cell.titleLabel?.text = title
-        
-        let description = task.value(forKey: "descriptionOfTask") as? String
         cell.descriptionLabel?.text = description
-        
-        let priority = task.value(forKey: "priorityOfTask") as? Int
         cell.priorityLabel?.text = "Priority " + (String(priority ?? 0))
-        
-        let date = formatter.string(from: task.value(forKey: "dateToBeDone") as? Date ?? .init())
-        cell.dateToBeDoneLabel?.text = "Date " + date
+        cell.dateToBeDoneLabel?.text = date
         
         return cell
     }
@@ -127,7 +155,28 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
 
 
 
-
+extension MainViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.searchTextField.text == "" {
+            searchData = nil
+            toDoTable.reloadData()
+            return
+        }
+        
+        searchData = toDoList.tasks?.filter {
+            (task: Task) in
+            return task.titleOfTask?.lowercased().contains(searchText.lowercased()) ?? false || task.descriptionOfTask?.lowercased().contains(searchText.lowercased()) ?? false
+        }
+        toDoTable.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchData = nil
+        searchBar.searchTextField.text = ""
+        view.endEditing(true)
+        toDoTable.reloadData()
+    }
+}
 
 
 

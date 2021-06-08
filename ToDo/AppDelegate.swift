@@ -34,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
+    
     lazy var persistentContainer: NSPersistentContainer = {
             /*
              The persistent container for the application. This implementation

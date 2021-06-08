@@ -12,10 +12,12 @@ protocol TransferedDelegate: AnyObject {
                 description: String,
                 date: Date,
                 priority: Int)
+    
     func updateTask(title: String,
                     description: String,
                     date: Date,
                     priority: Int)
+    
     func getInfo() -> Task
     func deleteTask()
 }

@@ -12,6 +12,11 @@ class ToDoList {
     
     private (set) var tasks: [Task]? = []
     
+    private var managedContext: NSManagedObjectContext {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistentContainer.viewContext
+    }
+    
     enum SortBy {
         case priotity
         case date
@@ -42,7 +47,7 @@ class ToDoList {
     
     // MARK: sort by option
     func sortBy(_ option: SortBy) {
-        let context = getContext()
+
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
 
         var task: [Task]? = nil
@@ -60,7 +65,7 @@ class ToDoList {
         fetchRequest.sortDescriptors = [sortBy]
         
         do {
-            task = try context.fetch(fetchRequest)
+            task = try managedContext.fetch(fetchRequest)
             setTaskList(tasks: task)
         } catch {
             setTaskList(tasks: task)
@@ -70,7 +75,6 @@ class ToDoList {
     }
     // MARK: delete task by index
     func deleteTask (_ deleteTask: Task) {
-        let managedContext = getContext()
         managedContext.delete(deleteTask)
         save()
         
@@ -81,7 +85,6 @@ class ToDoList {
                     date: Date,
                     priority: Int) {
         
-        let managedContext = getContext()
         
         let entity = NSEntityDescription.entity(forEntityName: "Task",
                                                 in: managedContext)!
@@ -102,22 +105,11 @@ class ToDoList {
     
     // MARK: save
     func save() {
-        
-        let context = getContext()
-        
         do {
-            try context.save()
+            try managedContext.save()
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
-    }
-    
-    // MARK: Core data context getter
-    
-    func getContext() -> NSManagedObjectContext {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.persistentContainer.viewContext
-        return managedContext
     }
 }
 
