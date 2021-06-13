@@ -10,7 +10,7 @@ import CoreData
 
 
 
-class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MainViewController: UIViewController, UITableViewDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var toDoTable: UITableView!
@@ -89,6 +89,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return viewController
     }
     
+    
+}
+extension MainViewController: UITableViewDataSource {
+    
     // MARK: all about table
     func tableView(_ tableView: UITableView,
                    willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -104,6 +108,14 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return searchData?.count ?? 0
     }
     
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            indexOfTypedRow = indexPath.row
+            deleteTask()
+        }
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         
         return 1
@@ -115,40 +127,42 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: "toDoIdn",
                                                  for: indexPath) as! CustomTableViewCell
      
-        
-        
         cell.selectionStyle = .none
-        let title: String?
-        let description: String?
-        let priority: Int?
-        let date: String?
+        let taskData: (title: String?, description: String?, priority: Int?, date: String?)
         
         switch searchData {
         case .none:
             guard let task = toDoList.tasks?[indexPath.row] else {
                 return UITableViewCell()
             }
-            title = task.value(forKey: "titleOfTask") as? String
-            description = task.value(forKey: "descriptionOfTask") as? String
-            priority = task.value(forKey: "priorityOfTask") as? Int
-            date = formatter.string(from: task.value(forKey: "dateToBeDone") as! Date)
+            taskData = setTaskData(task: task)
             
         case .some(_):
             guard let task = searchData?[indexPath.row] else {
                 return UITableViewCell()
             }
-            title = task.value(forKey: "titleOfTask") as? String
-            description = task.value(forKey: "descriptionOfTask") as? String
-            priority = task.value(forKey: "priorityOfTask") as? Int
-            date = formatter.string(from: task.value(forKey: "dateToBeDone") as! Date)
+            taskData = setTaskData(task: task)
         }
 
-        cell.titleLabel?.text = title
-        cell.descriptionLabel?.text = description
-        cell.priorityLabel?.text = "Priority " + (String(priority ?? 0))
-        cell.dateToBeDoneLabel?.text = date
+        cell.titleLabel?.text = taskData.title
+        cell.descriptionLabel?.text = taskData.description != "" ? taskData.description : "There is no description!"
+        cell.priorityLabel?.text = "Priority " + (String(taskData.priority ?? 0))
+        cell.dateToBeDoneLabel?.text = taskData.date
         
         return cell
+    }
+    
+    
+    func setTaskData(task: Task) -> (title: String?, description: String?, priority: Int?, date: String?) {
+        
+        let taskData: (title: String?, description: String?, priority: Int?, date: String?)
+        
+        taskData.title = task.value(forKey: "titleOfTask") as? String
+        taskData.description = task.value(forKey: "descriptionOfTask") as? String
+        taskData.priority = task.value(forKey: "priorityOfTask") as? Int
+        taskData.date = formatter.string(from: task.value(forKey: "dateToBeDone") as! Date)
+        
+        return taskData
     }
 }
 
