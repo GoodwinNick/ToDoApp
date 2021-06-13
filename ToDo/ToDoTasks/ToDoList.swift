@@ -77,8 +77,9 @@ class ToDoList {
     func deleteTask (_ deleteTask: Task) {
         managedContext.delete(deleteTask)
         save()
-        
     }
+    
+    
     // MARK: addNewTask
     func addNewTask(title: String,
                     description: String,
@@ -102,6 +103,7 @@ class ToDoList {
         tasks?.append(nsmo as! Task)
         save()
     }
+    
     
     // MARK: save
     func save() {

@@ -32,6 +32,12 @@ class MainViewController: UIViewController, UITableViewDelegate {
         searchBar.delegate = self
         
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchReq()
+      }
+    
     
     // MARK: hide keyboard
     override func touchesEnded(_ touches: Set<UITouch>,
@@ -59,11 +65,7 @@ class MainViewController: UIViewController, UITableViewDelegate {
       }
 
 
-    // MARK: - view will appear
-      override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        fetchReq()
-      }
+
 
     
     @IBAction func sortByPriority(_ sender: Any) {
@@ -168,7 +170,7 @@ extension MainViewController: UITableViewDataSource {
 
 
 
-
+// MARK: extension for search
 extension MainViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.searchTextField.text == "" {
